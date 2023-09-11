@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Foto aufteilen und herunterladen</title>
+</head>
+<body>
+    <input type="file" accept="image/*" id="imageInput">
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                var img = new Image();
+                img.src = event.target.result;
+
+                img.onload = function () {
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+
+                    var tileWidth = img.width / 3;
+                    var tileHeight = img.height / 3;
+
+                    for (var row = 0; row < 3; row++) {
+                        for (var col = 0; col < 3; col++) {
+                            var x = col * tileWidth;
+                            var y = row * tileHeight;
+                            var width = tileWidth;
+                            var height = tileHeight;
+
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+
+                            var tileImage = new Image();
+                            tileImage.src = canvas.toDataURL();
+
+                            // Füge das Bild in das Dokument ein
+                            document.getElementById('output').appendChild(tileImage);
+
+                            // Füge einen Download-Link hinzu
+                            var a = document.createElement('a');
+                            a.href = canvas.toDataURL('image/png'); // Hier kannst du das gewünschte Format einstellen
+                            a.download = 'teil_' + row + '_' + col + '.png'; // Setze den Dateinamen
+                            a.innerText = 'Teil ' + row + '-' + col;
+                            document.getElementById('output').appendChild(a);
+                        }
+                    }
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>
