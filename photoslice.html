@@ -6,6 +6,14 @@
 </head>
 <body>
     <input type="file" accept="image/*" id="imageInput">
+    <div>
+        <label for="rows">Anzahl der Zeilen:</label>
+        <input type="number" id="rows" min="1" value="3">
+    </div>
+    <div>
+        <label for="cols">Anzahl der Spalten:</label>
+        <input type="number" id="cols" min="1" value="3">
+    </div>
     <div id="output"></div>
 
     <script>
@@ -21,11 +29,14 @@
                     var canvas = document.createElement('canvas');
                     var ctx = canvas.getContext('2d');
 
-                    var tileWidth = img.width / 3;
-                    var tileHeight = img.height / 3;
+                    var rows = parseInt(document.getElementById('rows').value);
+                    var cols = parseInt(document.getElementById('cols').value);
 
-                    for (var row = 0; row < 3; row++) {
-                        for (var col = 0; col < 3; col++) {
+                    var tileWidth = img.width / cols;
+                    var tileHeight = img.height / rows;
+
+                    for (var row = 0; row < rows; row++) {
+                        for (var col = 0; col < cols; col++) {
                             var x = col * tileWidth;
                             var y = row * tileHeight;
                             var width = tileWidth;
